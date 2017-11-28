@@ -1,13 +1,46 @@
 'use strict';
 
-module.exports = appInfo => {
-  const config = exports = {};
+const pluginConfig = {
+  mysql: {
+    client: {
+      host: 'localhost',
+      port: '3306',
+      user: 'local_gun',
+      password: 'gun2017',
+      database: 'gun',
+    },
+    app: true,
+    agent: false,
+  },
+  session: {
+    key: 'GUN_SESS',
+    maxAge: 24 * 3600 * 1000, // one day
+    httpOnly: true,
+    overwrite: true,
+    encrypt: true,
+    // domain: '.com',
+  },
+  redis: {
+    clients: {
+      session: { 
+        host: '127.0.0.1',
+        port: '6379',
+        password: 'gun2017',
+        db: 0,
+      },
+    },
+  },
+  sessionRedis: {
+    name: 'session', 
+  },
+};
 
-  // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_1511843862137_1207';
+const middleware = {
+  middleware: ['updateSession'],
+  //other config for middleware
+};
 
-  // add your config here
-  config.middleware = [];
 
-  return config;
+module.exports = () => {
+  return Object.assign({keys: 'gun2017'}, pluginConfig, middleware);
 };

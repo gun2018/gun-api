@@ -1,11 +1,12 @@
 'use strict';
 
-const Controller = require('egg').Controller;
+module.exports = app => {
+  class HomeController extends app.Controller {
+    async index() {
+      const {ctx, service} = this;
 
-class HomeController extends Controller {
-  async index() {
-    this.ctx.body = 'hi, egg';
+      ctx.body = await service.home.find();
+    }
   }
-}
-
-module.exports = HomeController;
+  return HomeController;
+};
