@@ -3,7 +3,7 @@
 /**
  * @param {Egg.Application} app - egg application
  */
-module.exports = app => {
-  const { router, controller } = app;
+module.exports = ({ router, controller }) => {
+  
   router.get('/', controller.home.index);
 };

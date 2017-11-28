@@ -35,6 +35,21 @@ const pluginConfig = {
   },
 };
 
+const securityConfig = {
+  cors: {
+    credentials: true,
+  },
+  security: {
+    domainWhiteList: ['http://gun.com'],
+    csrf: {
+      headerName: 'x-csrf-token',
+      // useSession: true,
+      // cookieName: 'csrfToken',
+      // sessionName: 'csrfToken', //等前端环境搭好
+    },
+  },
+};
+
 const middleware = {
   middleware: ['updateSession'],
   //other config for middleware
@@ -42,5 +57,5 @@ const middleware = {
 
 
 module.exports = () => {
-  return Object.assign({keys: 'gun2017'}, pluginConfig, middleware);
+  return Object.assign({keys: 'gun2017'}, pluginConfig, middleware, securityConfig);
 };
