@@ -3,7 +3,8 @@
 /**
  * @param {Egg.Application} app - egg application
  */
-module.exports = ({ router, controller }) => {
-  
-  router.get('/', controller.home.index);
+module.exports = app => {
+  require('./router/user')(app);
+
+  app.get('/', 'main.index');
 };

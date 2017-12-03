@@ -18,11 +18,11 @@ const pluginConfig = {
     httpOnly: true,
     overwrite: true,
     encrypt: true,
-    // domain: '.com',
+    domain: '.gun.com',
   },
   redis: {
     clients: {
-      session: { 
+      session: {
         host: '127.0.0.1',
         port: '6379',
         password: 'gun2017',
@@ -42,10 +42,10 @@ const securityConfig = {
   security: {
     domainWhiteList: ['http://gun.com'],
     csrf: {
+      enable: true,
       headerName: 'x-csrf-token',
-      // useSession: true,
-      // cookieName: 'csrfToken',
-      // sessionName: 'csrfToken', //等前端环境搭好
+      cookieDomain: '.gun.com',
+      ignoreJSON: false,
     },
   },
 };
@@ -57,5 +57,5 @@ const middleware = {
 
 
 module.exports = () => {
-  return Object.assign({keys: 'gun2017'}, pluginConfig, middleware, securityConfig);
+  return Object.assign({ keys: 'gun2017' }, pluginConfig, middleware, securityConfig);
 };
