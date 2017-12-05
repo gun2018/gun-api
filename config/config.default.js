@@ -1,18 +1,6 @@
 'use strict';
-
 const pluginConfig = {
-  mysql: {
-    client: {
-      host: 'localhost',
-      port: '3306',
-      user: 'local_gun',
-      password: 'gun2017',
-      database: 'gun',
-    },
-    app: true,
-    agent: false,
-  },
-  session: {
+  session: { 
     key: 'GUN_SESS',
     maxAge: 24 * 3600 * 1000, // one day
     httpOnly: true,

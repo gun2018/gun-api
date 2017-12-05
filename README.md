@@ -1,4 +1,4 @@
-# gun
+# gun-admin
 
 
 ## 快速入门
