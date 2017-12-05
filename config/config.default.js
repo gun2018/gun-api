@@ -6,7 +6,7 @@ const pluginConfig = {
     httpOnly: true,
     overwrite: true,
     encrypt: true,
-    domain: '.gun.com',
+    domain: '.gun.yefun.top',
   },
   redis: {
     clients: {
@@ -28,11 +28,11 @@ const securityConfig = {
     credentials: true,
   },
   security: {
-    domainWhiteList: ['http://gun.com'],
+    domainWhiteList: ['http://gun.yefun.top'],
     csrf: {
       enable: true,
       headerName: 'x-csrf-token',
-      cookieDomain: '.gun.com',
+      cookieDomain: '.gun.yefun.top',
       ignoreJSON: false,
     },
   },
