@@ -30,20 +30,26 @@ module.exports = app => {
       const isEmailCodeRight = emailCode === '6666';
       if (!isEmailCodeRight) return ctx.body = signMsg(0, { email: '验证码错误' });
 
-      const isSave = await UserService.save({ nickname, email, password });
-      if (!isSave) return ctx.throw(500);
+      const isSuccess = await UserService.save({ nickname, email, password });
+      if (!isSuccess) return ctx.throw(500);
 
       const user = await UserService.find({ nickname });
       ctx.session = { user };
       ctx.body = signMsg(1, { success: true }, user);
     }
+
+    async signout() {
+      const { ctx } = this;
+      ctx.session.user = null;
+      ctx.body = signMsg(1, { success: true });
+    }
   };
 };
 
-function signMsg(status, msg, userdata) {
+function signMsg(status, msg, userData) {
   return {
     status, 
     msg,
-    userdata,
+    userData,
   };
 }

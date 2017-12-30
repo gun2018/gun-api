@@ -5,6 +5,7 @@
  */
 module.exports = app => {
   require('./router/user')(app);
+  require('./router/news')(app);
 
   app.get('/', 'main.index');
 };

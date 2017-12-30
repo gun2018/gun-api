@@ -27,6 +27,7 @@ module.exports = app => {
         nickname, 
         email,
         password: hashPassword,
+        created_at: new Date(),
       });
       return result.affectedRows === 1;
     }
