@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = app => {
-  app.post('/addNews', 'news.addNews');
+  app.post('/addPost', 'post.addPost');
 };

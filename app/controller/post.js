@@ -7,10 +7,10 @@ module.exports = app => {
     //   const { limit, page } = ctx.request.query;
       
     // }
-    async addNews() {
-      const { ctx, service: { news: NewsService } } = this;
+    async addPost() {
+      const { ctx, service: { post: PostService } } = this;
       const { uid, title, description, content, source } = ctx.request.body;
-      const isSuccess = await NewsService.addPullRequest({ 
+      const isSuccess = await PostService.addPullRequest({ 
         uid,
         title,
         description, 
