@@ -2,10 +2,10 @@
 const pluginConfig = {
   mysql: {
     client: {
-      host: 'localhost',
+      host: '119.29.26.21',
       port: '3306',
-      user: 'local_gun',
-      password: 'gun2017',
+      user: 'gun',
+      password: 'gun2018',
       database: 'gun',
     },
     app: true,
