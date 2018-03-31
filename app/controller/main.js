@@ -5,7 +5,7 @@ module.exports = app => {
 
     async index() {
       const { ctx } = this;
-      // ctx.body = ctx.session.user;
+      ctx.body = ctx.session.user;
       ctx.body = {
         code: 0,
         data: '哈哈哈'

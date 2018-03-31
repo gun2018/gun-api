@@ -6,10 +6,10 @@ exports.cors = {
   enable: true,
   package: 'egg-cors',
 };
-exports.mysql = {
-  enable: true,
-  package: 'egg-mysql',
-};
+// exports.mysql = {
+//   enable: true,
+//   package: 'egg-mysql',
+// };
 exports.redis = {
   enable: true,
   package: 'egg-redis',

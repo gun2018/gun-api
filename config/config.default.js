@@ -1,6 +1,6 @@
 'use strict';
 const pluginConfig = {
-  session: { 
+  session: {
     key: 'GUN_SESS',
     maxAge: 24 * 3600 * 1000, // one day
     httpOnly: true,
@@ -19,7 +19,7 @@ const pluginConfig = {
     },
   },
   sessionRedis: {
-    name: 'session', 
+    name: 'session',
   },
 };
 
@@ -30,7 +30,7 @@ const securityConfig = {
   security: {
     domainWhiteList: ['http://localhost:3000'],
     csrf: {
-      enable: true,
+      enable: false,
     },
   },
 };
@@ -40,7 +40,11 @@ const middleware = {
   //other config for middleware
 };
 
-
 module.exports = () => {
-  return Object.assign({ keys: 'gun2017' }, pluginConfig, middleware, securityConfig);
+  return Object.assign(
+    { keys: 'gun2017' },
+    pluginConfig,
+    middleware,
+    securityConfig
+  );
 };
