@@ -4,10 +4,10 @@ const { GraphQLDateTime } = require('graphql-iso-date');
 // const { hasMany } = require('../../../lib/easy-monster');
 
 const Post = new GraphQLObjectType({
-  description: '文章',
+  description: '文章段落',
   name: 'Post',
   sqlDatabase: 'gun',
-  sqlTable: 'post',
+  sqlTable: 'post_part',
   uniqueKey: 'id',
   fields: () => ({
     id: { type: GraphQLInt, isArg: true },
@@ -16,9 +16,8 @@ const Post = new GraphQLObjectType({
       description: '状态： -1-已删除、0-默认、1-可用、2-过期',
       isArg: true,
     },
-    title: {
+    content: {
       type: GraphQLString,
-      isArg: true,
       description: '标题',
     },
     createTime: {
