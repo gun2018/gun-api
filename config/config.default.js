@@ -28,7 +28,7 @@ const securityConfig = {
     credentials: true,
   },
   security: {
-    domainWhiteList: ['http://localhost:3000'],
+    domainWhiteList: ['.yefun.top', 'yefun.top'],
     csrf: {
       enable: false,
     },
