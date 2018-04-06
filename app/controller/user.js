@@ -8,12 +8,13 @@ module.exports = app => {
       // const { limit, page } = ctx.request.query;
       const user = await UserService.wxLogin(code);
       ctx.session = { user };
-      ctx.body = signMsg(0, { success: true }, user);
+      ctx.body = signMsg(0, { success: true }, makeUserRes(user));
     }
     async checkAuth() {
       const { ctx } = this;
       console.log('user', ctx.session);
-      ctx.body = signMsg(0, { success: true }, ctx.session.user);
+      const { user } = ctx.session;
+      ctx.body = signMsg(0, { success: true }, makeUserRes(user));
     }
   };
 };
@@ -23,5 +24,18 @@ function signMsg(code, msg, data) {
     code,
     msg,
     data,
+  };
+}
+
+function makeUserRes(user) {
+  return {
+    open_id: user.openid,
+    nickname: user.nickname,
+    sex: user.sex,
+    language: user.language,
+    city: user.city,
+    province: user.province,
+    country: user.country,
+    headimgurl: user.headimgurl,
   };
 }
