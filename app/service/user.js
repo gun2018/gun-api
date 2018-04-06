@@ -1,39 +1,24 @@
-'use strict';
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 module.exports = app => {
   return class UserService extends app.Service {
-    async isExisted({ nickname, email }) {
-      //test nickname or email
-      return await app.mysql.get('users', 
-        {
-          [nickname ? 'nickname' : 'email']: nickname || email,
-        }, 
-        {
-          columns: ['id'],
-        });
-    }
-    async find({ nickname, email, password }) {
-      const user = await app.mysql.get('users', {
-        [nickname ? 'nickname' : 'email']: nickname || email,
-      });
-      if (!password || this.compare(password, user.password)) return user;
-    }
-    async save({ nickname, email, password }) {
-      const salt = await bcrypt.genSalt();
-      const hashPassword = await bcrypt.hash(password, salt);
+    async wxLogin(code) {
+      const { appId, appSecret } = app.config;
+      const getAccessTokenRes = await axios.get(
+        `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appId}&secret=${appSecret}&code=${code}&grant_type=authorization_code`,
+      );
+      const accessToken = getAccessTokenRes.data.access_token;
+      const openId = getAccessTokenRes.data.openid;
 
-      const result = await app.mysql.insert('users', {
-        nickname, 
-        email,
-        password: hashPassword,
-        created_at: new Date(),
-      });
-      return result.affectedRows === 1;
+      const getUserInfoRes = await axios.get(
+        `https://api.weixin.qq.com/sns/userinfo?access_token=${accessToken}&openid=${openId}&lang=zh_CN`,
+      );
+      const a = {
+        ...getAccessTokenRes.data,
+        ...getUserInfoRes.data,
+      };
+      return a;
     }
-    async compare(data, hash) {
-      return await bcrypt.compare(data, hash);
-    }
-    
   };
 };

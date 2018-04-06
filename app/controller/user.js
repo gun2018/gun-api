@@ -2,54 +2,26 @@
 
 module.exports = app => {
   return class UserController extends app.Controller {
-    async signin() {
-      const { ctx, service } = this;
-      const { nickname, email, password } = ctx.request.body;
-      const user = await service.user.find({ nickname, email, password });
-      
-      if (!user) return ctx.body = signMsg(0, { nomal: '用户名或密码错误' });
-      //update csrfToken
-      ctx.rotateCsrfSecret();
-
-      ctx.session = { user };
-      ctx.body = signMsg(1, { success: true }, user);
-    }
-
-    async signup() {
-      //judge nickname, email, password, emailCode
-      //ignore XSS temporarily!
+    async wxLogin() {
       const { ctx, service: { user: UserService } } = this;
-      const { nickname, email, emailCode, password } = ctx.request.body;
-
-      const isNicknameExisted = await UserService.isExisted({ nickname });
-      if (isNicknameExisted) return ctx.body = signMsg(0, { nickname: '用户名已被使用' });
-
-      const isEmailExisted = await UserService.isExisted({ email });
-      if (isEmailExisted) return ctx.body = signMsg(0, { email: '邮箱已被使用' });
-
-      const isEmailCodeRight = emailCode === '6666';
-      if (!isEmailCodeRight) return ctx.body = signMsg(0, { email: '验证码错误' });
-
-      const isSuccess = await UserService.save({ nickname, email, password });
-      if (!isSuccess) return ctx.throw(500);
-
-      const user = await UserService.find({ nickname });
+      const { code } = ctx.request.body;
+      // const { limit, page } = ctx.request.query;
+      const user = await UserService.wxLogin(code);
       ctx.session = { user };
-      ctx.body = signMsg(1, { success: true }, user);
+      ctx.body = signMsg(0, { success: true }, user);
     }
-
-    async signout() {
+    async checkAuth() {
       const { ctx } = this;
-      ctx.session.user = null;
-      ctx.body = signMsg(1, { success: true });
+      console.log('user', ctx.session);
+      ctx.body = signMsg(0, { success: true }, ctx.session.user);
     }
   };
 };
 
-function signMsg(status, msg, userData) {
+function signMsg(code, msg, data) {
   return {
-    status, 
+    code,
     msg,
-    userData,
+    data,
   };
 }

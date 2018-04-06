@@ -11,7 +11,7 @@ module.exports = app => {
       const { ctx } = this;
       await graphqlKoa({
         schema,
-        context: { user: ctx.user, knex: app.knex, app },
+        context: { user: ctx.session, knex: app.knex, app },
       })(ctx);
     }
     async graphiql() {

@@ -18,3 +18,8 @@ exports.sessionRedis = {
   enable: true,
   package: 'egg-session-redis',
 };
+
+exports.passport = {
+  enable: true,
+  package: 'egg-passport',
+};

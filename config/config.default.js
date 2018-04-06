@@ -33,6 +33,8 @@ const securityConfig = {
       enable: false,
     },
   },
+  appId: 'wx71658a29db50331b',
+  appSecret: '620ef3143e585496da7dcc0fc8ab48a0',
 };
 
 const middleware = {
