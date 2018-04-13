@@ -1,7 +1,8 @@
 /* eslint-disable global-require */
 const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
-// const { hasMany } = require('../../../lib/easy-monster');
+const { hasMany } = require('../../../lib/easy-monster');
+const PostPart = require('./PostPart');
 
 const Post = new GraphQLObjectType({
   description: '文章',
@@ -21,11 +22,33 @@ const Post = new GraphQLObjectType({
       isArg: true,
       description: '标题',
     },
+    brief: {
+      type: GraphQLString,
+      description: '文章简介',
+    },
+    cover: {
+      type: GraphQLString,
+      description: '文章头图',
+    },
+    category: {
+      type: GraphQLString,
+      description: '文章类型',
+    },
     createTime: {
       type: GraphQLDateTime,
       sqlColumn: 'create_time',
       description: '创建时间',
     },
+    updateTime: {
+      type: GraphQLDateTime,
+      sqlColumn: 'update_time',
+      description: '更新时间',
+    },
+    detail: hasMany(PostPart, {
+      description: '文章详情',
+      thisKey: 'id',
+      foreignKey: 'post_id',
+    }),
   }),
 });
 
