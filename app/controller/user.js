@@ -8,24 +8,20 @@ module.exports = app => {
       // const { limit, page } = ctx.request.query;
       const user = await UserService.wxLogin(code);
       ctx.session = { user };
-      ctx.body = signMsg(0, { success: true }, makeUserRes(user));
+      ctx.success(makeUserRes(user));
     }
     async checkAuth() {
       const { ctx } = this;
       console.log('user', ctx.session);
       const { user } = ctx.session;
-      ctx.body = signMsg(0, { success: true }, makeUserRes(user));
+      if (user) {
+        ctx.success(makeUserRes(user));
+      } else {
+        ctx.fail(ctx.ERR_CODE.FAIL_AUTH);
+      }
     }
   };
 };
-
-function signMsg(code, msg, data) {
-  return {
-    code,
-    msg,
-    data,
-  };
-}
 
 function makeUserRes(user) {
   return {
