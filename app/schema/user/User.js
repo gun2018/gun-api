@@ -1,15 +1,13 @@
 /* eslint-disable global-require */
 const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
-const { hasOne } = require('../../../lib/easy-monster');
+// const { hasMany } = require('../../../lib/easy-monster');
 
-const User = require('../user/User');
-
-const Thinking = new GraphQLObjectType({
-  description: '观点',
-  name: 'Thinking',
+const User = new GraphQLObjectType({
+  description: '文章段落',
+  name: 'User',
   sqlDatabase: 'gun',
-  sqlTable: 'thinking',
+  sqlTable: 'user',
   uniqueKey: 'id',
   fields: () => ({
     id: { type: GraphQLInt, isArg: true },
@@ -18,20 +16,29 @@ const Thinking = new GraphQLObjectType({
       description: '状态： -1-已删除、0-默认、1-可用、2-过期',
       isArg: true,
     },
-    content: {
+    openId: {
       type: GraphQLString,
-      description: '内容',
-    },
-    userId: {
-      type: GraphQLInt,
-      sqlColumn: 'user_id',
       isArg: true,
+      sqlColumn: 'open_id',
     },
-    postId: {
+    nickname: {
+      type: GraphQLString,
+    },
+    avatarUrl: {
+      type: GraphQLString,
+      sqlColumn: 'avatar_url',
+    },
+    country: {
+      type: GraphQLString,
+    },
+    province: {
+      type: GraphQLString,
+    },
+    city: {
+      type: GraphQLString,
+    },
+    sex: {
       type: GraphQLInt,
-      sqlColumn: 'post_id',
-      description: '对应的文章Id',
-      isArg: true,
     },
     createTime: {
       type: GraphQLDateTime,
@@ -43,12 +50,7 @@ const Thinking = new GraphQLObjectType({
       sqlColumn: 'update_time',
       description: '更新时间',
     },
-    owner: hasOne(User, {
-      description: '想法提出者',
-      thisKey: 'user_id',
-      foreignKey: 'id',
-    }),
   }),
 });
 
-module.exports = Thinking;
+module.exports = User;
