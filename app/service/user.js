@@ -24,32 +24,33 @@ module.exports = app => {
       const getUserInfoRes = await axios.get(
         `https://api.weixin.qq.com/sns/userinfo?access_token=${accessToken}&openid=${openId}&lang=zh_CN`,
       );
-      console.log('getUserInfoRes', getUserInfoRes.data);
-      const user = {
+      const isUserExist = await this.getUserByOpenId(openId);
+      let userInsertRes;
+      if (!isUserExist) {
+        userInsertRes = await app.knex('user').insert({
+          open_id: getAccessTokenRes.data.openid,
+          nickname: getUserInfoRes.data.nickname,
+          avatar_url: getUserInfoRes.data.headimgurl,
+          sex: getUserInfoRes.data.sex,
+          country: getUserInfoRes.data.country,
+          province: getUserInfoRes.data.province,
+          city: getUserInfoRes.data.city,
+        });
+        console.log('userInsertRes', userInsertRes);
+      }
+      // console.log('knex', app.knex);
+      return {
+        id: isUserExist || userInsertRes[0],
         ...getAccessTokenRes.data,
         ...getUserInfoRes.data,
       };
-      console.log('user', user);
-      const isUserExist = await this.getUserByOpenId(user.openid);
-      if (!isUserExist) {
-        await app.knex('user').insert({
-          open_id: user.openid,
-          nickname: user.nickname,
-          avatar_url: user.headimgurl,
-          sex: user.sex,
-          country: user.country,
-          province: user.province,
-          city: user.city,
-        });
-      }
-      // console.log('knex', app.knex);
-      return user;
     }
     async getUserByOpenId(openId) {
       const userRes = await app
         .knex('user')
         .select('id')
         .where({ open_id: openId });
+      console.log('userRes', userRes);
       return userRes[0] ? userRes[0].id : userRes[0];
     }
   };
