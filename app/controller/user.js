@@ -32,7 +32,7 @@ module.exports = app => {
         province: '广东',
         country: '中国',
         headimgurl:
-          'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKiboeh23vhCNjJTxlXbs9mLiagiczy8Wd6gIxviaV4vpUyOso741Qz53XDdKyAkTH4Iic7SPkkax8xO0g/132',
+          'http://himg.bdimg.com/sys/portrait/item/c1b662616279e8bfaae8bfa6e587b9e587b8e69bbc202a.jpg',
       };
       ctx.session = { user };
       ctx.success(makeUserRes(user));
