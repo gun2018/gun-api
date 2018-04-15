@@ -1,4 +1,5 @@
 const e = require('../../config/error');
+const VError = require('verror');
 
 module.exports = {
   // 错误码 自定义模块规则 前两位为模块编号,后两位为具体错误码 如1001
@@ -26,6 +27,14 @@ module.exports = {
    */
   fail(argCode, argMsg, argData) {
     this.body = this.formatResult(argCode, argMsg, argData);
+  },
+  /**
+   * 构造运行异常对象
+   * @param {*} options 错误信息
+   */
+  error(options = {}) {
+    const { code, message } = options;
+    throw new VError('fail: "%s"', message || this.ERR_MSG[code] || '');
   },
   formatResult(argCode = this.ERR_CODE.FAIL, argMsg = null, argData = null) {
     let code = argCode;

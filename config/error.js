@@ -20,6 +20,9 @@ exports.err_code = {
     VERIFY_CODE_OUTDATED: 1010,
     NOT_REGISTERED: 1011,
     PHONE_OR_PASSWORD_WRONG: 1012,
+
+    WX_ACCESS_TOKEN_FAIL: 1013,
+    WX_USER_INFO_FAIL: 1014,
   },
 };
 
@@ -42,4 +45,6 @@ exports.err_msg = {
   '1010': '验证码过期,请重新获取',
   '1011': '该手机号未注册此角色账号',
   '1012': '手机号或密码错误',
+  '1013': '获取微信access_token失败',
+  '1014': '获取微信用户信息失败',
 };
