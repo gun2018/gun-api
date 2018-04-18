@@ -3,7 +3,10 @@
 module.exports = app => {
   return class UserController extends app.Controller {
     async wxLogin() {
-      const { ctx, service: { user: UserService } } = this;
+      const {
+        ctx,
+        service: { user: UserService },
+      } = this;
       const { code } = ctx.request.body;
       // const { limit, page } = ctx.request.query;
       const user = await UserService.wxLogin(code);
@@ -33,6 +36,7 @@ module.exports = app => {
         country: '中国',
         headimgurl:
           'http://himg.bdimg.com/sys/portrait/item/c1b662616279e8bfaae8bfa6e587b9e587b8e69bbc202a.jpg',
+        signText: '帅气的个性签名哈',
       };
       ctx.session = { user };
       ctx.success(makeUserRes(user));
@@ -51,5 +55,6 @@ function makeUserRes(user) {
     province: user.province,
     country: user.country,
     headimgurl: user.headimgurl,
+    sign_text: user.signText,
   };
 }

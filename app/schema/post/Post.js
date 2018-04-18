@@ -3,6 +3,8 @@ const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
 const { hasMany } = require('../../../lib/easy-monster');
 const PostPart = require('./PostPart');
+const PostLike = require('./PostLike');
+const Thinking = require('../thinking/Thinking');
 
 const Post = new GraphQLObjectType({
   description: '文章',
@@ -46,6 +48,16 @@ const Post = new GraphQLObjectType({
     },
     detail: hasMany(PostPart, {
       description: '文章详情',
+      thisKey: 'id',
+      foreignKey: 'post_id',
+    }),
+    like: hasMany(PostLike, {
+      description: '点赞',
+      thisKey: 'id',
+      foreignKey: 'post_id',
+    }),
+    thinking: hasMany(Thinking, {
+      description: '观点',
       thisKey: 'id',
       foreignKey: 'post_id',
     }),

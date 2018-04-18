@@ -24,9 +24,9 @@ module.exports = app => {
       const getUserInfoRes = await axios.get(
         `https://api.weixin.qq.com/sns/userinfo?access_token=${accessToken}&openid=${openId}&lang=zh_CN`,
       );
-      const isUserExist = await this.getUserByOpenId(openId);
+      const userInfo = await this.getUserByOpenId(openId);
       let userInsertRes;
-      if (!isUserExist) {
+      if (!userInfo) {
         userInsertRes = await app.knex('user').insert({
           open_id: getAccessTokenRes.data.openid,
           nickname: getUserInfoRes.data.nickname,
@@ -40,7 +40,8 @@ module.exports = app => {
       }
       // console.log('knex', app.knex);
       return {
-        id: isUserExist || userInsertRes[0],
+        id: userInfo ? userInfo.id : userInsertRes[0],
+        signText: userInfo ? userInfo.sign_text : '',
         ...getAccessTokenRes.data,
         ...getUserInfoRes.data,
       };
@@ -48,10 +49,10 @@ module.exports = app => {
     async getUserByOpenId(openId) {
       const userRes = await app
         .knex('user')
-        .select('id')
+        .select('id', 'sign_text')
         .where({ open_id: openId });
       console.log('userRes', userRes);
-      return userRes[0] ? userRes[0].id : userRes[0];
+      return userRes[0];
     }
   };
 };

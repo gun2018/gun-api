@@ -1,13 +1,13 @@
 /* eslint-disable global-require */
-const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
+const { GraphQLObjectType, GraphQLInt } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
 // const { hasMany } = require('../../../lib/easy-monster');
 
-const User = new GraphQLObjectType({
-  description: '文章段落',
-  name: 'User',
+const PostLike = new GraphQLObjectType({
+  description: '文章点赞',
+  name: 'PostLike',
   sqlDatabase: 'gun',
-  sqlTable: 'user',
+  sqlTable: 'post_like',
   uniqueKey: 'id',
   fields: () => ({
     id: { type: GraphQLInt, isArg: true },
@@ -16,33 +16,17 @@ const User = new GraphQLObjectType({
       description: '状态： -1-已删除、0-默认、1-可用、2-过期',
       isArg: true,
     },
-    openId: {
-      type: GraphQLString,
-      isArg: true,
-      sqlColumn: 'open_id',
-    },
-    nickname: {
-      type: GraphQLString,
-    },
-    avatarUrl: {
-      type: GraphQLString,
-      sqlColumn: 'avatar_url',
-    },
-    country: {
-      type: GraphQLString,
-    },
-    province: {
-      type: GraphQLString,
-    },
-    city: {
-      type: GraphQLString,
-    },
-    sex: {
+    postId: {
       type: GraphQLInt,
+      sqlColumn: 'post_id',
+      description: '对应的文章Id',
+      isArg: true,
     },
-    signText: {
-      type: GraphQLString,
-      sqlColumn: 'sign_text',
+    userId: {
+      type: GraphQLInt,
+      sqlColumn: 'user_id',
+      description: '点赞用户Id',
+      isArg: true,
     },
     createTime: {
       type: GraphQLDateTime,
@@ -57,4 +41,4 @@ const User = new GraphQLObjectType({
   }),
 });
 
-module.exports = User;
+module.exports = PostLike;
