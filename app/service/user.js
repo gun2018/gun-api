@@ -1,5 +1,6 @@
 // const bcrypt = require('bcrypt');
 const axios = require('axios');
+const { graphQuery } = require('../schema/util');
 
 module.exports = app => {
   return class UserService extends app.Service {
@@ -24,35 +25,71 @@ module.exports = app => {
       const getUserInfoRes = await axios.get(
         `https://api.weixin.qq.com/sns/userinfo?access_token=${accessToken}&openid=${openId}&lang=zh_CN`,
       );
+
+      console.log('getAccessTokenRes', getAccessTokenRes.data);
+      console.log('getUserInfoRes', getUserInfoRes.data);
       const userInfo = await this.getUserByOpenId(openId);
-      let userInsertRes;
-      if (!userInfo) {
-        userInsertRes = await app.knex('user').insert({
-          open_id: getAccessTokenRes.data.openid,
-          nickname: getUserInfoRes.data.nickname,
-          avatar_url: getUserInfoRes.data.headimgurl,
-          sex: getUserInfoRes.data.sex,
-          country: getUserInfoRes.data.country,
-          province: getUserInfoRes.data.province,
-          city: getUserInfoRes.data.city,
-        });
-        console.log('userInsertRes', userInsertRes);
+      // 如果 userInfo 存在 则返回 userInfo 就可以了？？？？
+      if (userInfo) {
+        return {
+          ...userInfo,
+          accessToken: getAccessTokenRes.data.access_token,
+          refreshTokeon: getAccessTokenRes.data.refresh_tokeon,
+        };
       }
-      // console.log('knex', app.knex);
+
+      const userInsertRes = await app.knex('user').insert({
+        open_id: getAccessTokenRes.data.openid,
+        nickname: getUserInfoRes.data.nickname,
+        avatar_url: getUserInfoRes.data.headimgurl,
+        sex: getUserInfoRes.data.sex,
+        country: getUserInfoRes.data.country,
+        province: getUserInfoRes.data.province,
+        city: getUserInfoRes.data.city,
+      });
+
       return {
-        id: userInfo ? userInfo.id : userInsertRes[0],
-        signText: userInfo ? userInfo.sign_text : '',
-        ...getAccessTokenRes.data,
-        ...getUserInfoRes.data,
+        id: userInsertRes[0],
+        openId: getUserInfoRes.data.openid,
+        nickname: getUserInfoRes.data.nickname,
+        sex: getUserInfoRes.data.sex,
+        city: getUserInfoRes.data.city,
+        province: getUserInfoRes.data.province,
+        country: getUserInfoRes.data.country,
+        avatarUrl: getUserInfoRes.data.headimgurl,
+        accessToken: getAccessTokenRes.data.access_token,
+        refreshTokeon: getAccessTokenRes.data.refresh_tokeon,
       };
+
+      // console.log('knex', app.knex);
     }
     async getUserByOpenId(openId) {
-      const userRes = await app
-        .knex('user')
-        .select('id', 'sign_text')
-        .where({ open_id: openId });
-      console.log('userRes', userRes);
-      return userRes[0];
+      const gql = `
+      {
+        user(openId: "${openId}") {
+          id
+          openId
+          nickname
+          sex
+          city
+          province
+          country
+          avatarUrl
+          signText
+          followers {
+            id
+            nickname
+            avatarUrl
+          }
+          fans {
+            id
+            nickname
+            avatarUrl
+          }
+        }
+      }`;
+      const userRes = await graphQuery(gql);
+      return userRes.data.user;
     }
   };
 };

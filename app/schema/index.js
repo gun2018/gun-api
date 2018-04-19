@@ -3,6 +3,7 @@ const { GraphQLObjectType, GraphQLSchema } = require('graphql');
 
 const post = require('./post');
 const thinking = require('./thinking');
+const user = require('./user');
 
 module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -11,6 +12,7 @@ module.exports = new GraphQLSchema({
     fields: () => ({
       ...post.query,
       ...thinking.query,
+      ...user.query,
     }),
   }),
   mutation: new GraphQLObjectType({
@@ -19,6 +21,7 @@ module.exports = new GraphQLSchema({
     fields: () => ({
       ...post.mutation,
       ...thinking.mutation,
+      ...user.mutation,
     }),
   }),
   description: '网校GraphQL',

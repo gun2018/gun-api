@@ -31,11 +31,9 @@ const securityConfig = {};
 
 const middleware = {};
 
-module.exports = () => {
-  return Object.assign(
-    { keys: 'gun2017' },
-    pluginConfig,
-    middleware,
-    securityConfig
-  );
-};
+module.exports = Object.assign(
+  { keys: 'gun2017' },
+  pluginConfig,
+  middleware,
+  securityConfig
+);

@@ -1,13 +1,12 @@
 /* eslint-disable global-require */
 const { GraphQLObjectType, GraphQLInt } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
-// const { hasMany } = require('../../../lib/easy-monster');
 
-const PostLike = new GraphQLObjectType({
-  description: '文章点赞',
-  name: 'PostLike',
+const Fan = new GraphQLObjectType({
+  description: '粉丝表',
+  name: 'Fan',
   sqlDatabase: 'gun',
-  sqlTable: 'post_like',
+  sqlTable: 'fan',
   uniqueKey: 'id',
   fields: () => ({
     id: { type: GraphQLInt, isArg: true },
@@ -16,17 +15,15 @@ const PostLike = new GraphQLObjectType({
       description: '状态： 0-删除、1-可用',
       isArg: true,
     },
-    postId: {
-      type: GraphQLInt,
-      sqlColumn: 'post_id',
-      description: '对应的文章Id',
-      isArg: true,
-    },
     userId: {
       type: GraphQLInt,
-      sqlColumn: 'user_id',
-      description: '点赞用户Id',
       isArg: true,
+      sqlColumn: 'user_id',
+    },
+    fanId: {
+      type: GraphQLInt,
+      isArg: true,
+      sqlColumn: 'fan_id',
     },
     createTime: {
       type: GraphQLDateTime,
@@ -41,4 +38,4 @@ const PostLike = new GraphQLObjectType({
   }),
 });
 
-module.exports = PostLike;
+module.exports = Fan;

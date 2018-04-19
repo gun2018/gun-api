@@ -1,7 +1,11 @@
 /* eslint-disable global-require */
-const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
+const {
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLList,
+} = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
-// const { hasMany } = require('../../../lib/easy-monster');
 
 const User = new GraphQLObjectType({
   description: '文章段落',
@@ -13,7 +17,7 @@ const User = new GraphQLObjectType({
     id: { type: GraphQLInt, isArg: true },
     status: {
       type: GraphQLInt,
-      description: '状态： -1-已删除、0-默认、1-可用、2-过期',
+      description: '状态： 0-删除、1-可用',
       isArg: true,
     },
     openId: {
@@ -53,6 +57,38 @@ const User = new GraphQLObjectType({
       type: GraphQLDateTime,
       sqlColumn: 'update_time',
       description: '更新时间',
+    },
+    fanStatus: {
+      type: GraphQLInt, // 关联粉丝表时使用
+    },
+    fans: {
+      type: new GraphQLList(User),
+      description: '粉丝',
+      where: () => `fan.status = 1`, //过滤掉取消关注的
+      junction: {
+        sqlTable: 'fan',
+        include: {
+          fanStatus: {
+            sqlColumn: 'status',
+          },
+        },
+        sqlJoins: [
+          (user, fan) => `${user}.id = ${fan}.user_id`,
+          (fan, user) => `${fan}.fan_id = ${user}.id`,
+        ],
+      },
+    },
+    followers: {
+      type: new GraphQLList(User),
+      description: '关注的人',
+      where: () => `follower.status = 1`, //过滤掉取消关注的
+      junction: {
+        sqlTable: 'follower',
+        sqlJoins: [
+          (user, follower) => `${user}.id = ${follower}.user_id`,
+          (follower, user) => `${follower}.follower_id = ${user}.id`,
+        ],
+      },
     },
   }),
 });

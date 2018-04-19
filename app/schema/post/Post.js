@@ -16,7 +16,7 @@ const Post = new GraphQLObjectType({
     id: { type: GraphQLInt, isArg: true },
     status: {
       type: GraphQLInt,
-      description: '状态： -1-已删除、0-默认、1-可用、2-过期',
+      description: '状态： 0-删除、1-可用',
       isArg: true,
     },
     title: {

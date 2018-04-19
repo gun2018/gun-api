@@ -30,11 +30,10 @@ module.exports = app => {
         openid: 'nonono',
         nickname: '模拟用户哈',
         sex: 1,
-        language: 'zh-cn',
         city: '汕尾',
         province: '广东',
         country: '中国',
-        headimgurl:
+        avatar_url:
           'http://himg.bdimg.com/sys/portrait/item/c1b662616279e8bfaae8bfa6e587b9e587b8e69bbc202a.jpg',
         signText: '帅气的个性签名哈',
       };
@@ -47,14 +46,15 @@ module.exports = app => {
 function makeUserRes(user) {
   return {
     id: user.id,
-    open_id: user.openid,
+    open_id: user.openId,
     nickname: user.nickname,
     sex: user.sex,
-    language: user.language,
     city: user.city,
     province: user.province,
     country: user.country,
-    headimgurl: user.headimgurl,
+    avatar_url: user.avatarUrl,
     sign_text: user.signText,
+    followers: user.followers,
+    fans: user.fans,
   };
 }
