@@ -80,11 +80,13 @@ module.exports = app => {
             id
             nickname
             avatarUrl
+            signText
           }
           fans {
             id
             nickname
             avatarUrl
+            signText
           }
         }
       }`;
