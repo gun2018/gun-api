@@ -24,19 +24,11 @@ module.exports = app => {
       }
     }
     async simulateLogin() {
-      const { ctx } = this;
-      const user = {
-        id: 2,
-        openid: 'nonono',
-        nickname: '模拟用户哈',
-        sex: 1,
-        city: '汕尾',
-        province: '广东',
-        country: '中国',
-        avatar_url:
-          'http://himg.bdimg.com/sys/portrait/item/c1b662616279e8bfaae8bfa6e587b9e587b8e69bbc202a.jpg',
-        signText: '帅气的个性签名哈',
-      };
+      const {
+        ctx,
+        service: { user: UserService },
+      } = this;
+      const user = await UserService.getUserByOpenId('nonono');
       ctx.session = { user };
       ctx.success(makeUserRes(user));
     }
