@@ -76,21 +76,12 @@ module.exports = app => {
           country
           avatarUrl
           signText
-          followers {
-            id
-            nickname
-            avatarUrl
-            signText
-          }
-          fans {
-            id
-            nickname
-            avatarUrl
-            signText
-          }
+          fanCount
+          followerCount
         }
       }`;
       const userRes = await graphQuery(gql);
+      console.log('getUserByOpenId', userRes);
       return userRes.data.user;
     }
   };

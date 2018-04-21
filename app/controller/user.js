@@ -46,7 +46,7 @@ function makeUserRes(user) {
     country: user.country,
     avatar_url: user.avatarUrl,
     sign_text: user.signText,
-    followers: user.followers || [],
-    fans: user.fans || [],
+    fan_count: user.fanCount || 0,
+    follower_count: user.followerCount || 0,
   };
 }

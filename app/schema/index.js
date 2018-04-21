@@ -24,5 +24,5 @@ module.exports = new GraphQLSchema({
       ...user.mutation,
     }),
   }),
-  description: '网校GraphQL',
+  description: 'GUN GraphQL',
 });

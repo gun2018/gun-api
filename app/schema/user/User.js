@@ -3,7 +3,7 @@ const {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
-  GraphQLList,
+  // GraphQLList,
 } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
 
@@ -61,35 +61,48 @@ const User = new GraphQLObjectType({
     fanStatus: {
       type: GraphQLInt, // 关联粉丝表时使用
     },
-    fans: {
-      type: new GraphQLList(User),
-      description: '粉丝',
-      where: () => `fan.status = 1`, //过滤掉取消关注的
-      junction: {
-        sqlTable: 'fan',
-        include: {
-          fanStatus: {
-            sqlColumn: 'status',
-          },
-        },
-        sqlJoins: [
-          (user, fan) => `${user}.id = ${fan}.user_id`,
-          (fan, user) => `${fan}.fan_id = ${user}.id`,
-        ],
-      },
+    fanCount: {
+      type: GraphQLInt,
+      description: '粉丝数量',
+      sqlExpr: table =>
+        `(SELECT count(*) FROM fan WHERE status = 1 AND user_id = ${table}.id)`,
     },
-    followers: {
-      type: new GraphQLList(User),
-      description: '关注的人',
-      where: () => `follower.status = 1`, //过滤掉取消关注的
-      junction: {
-        sqlTable: 'follower',
-        sqlJoins: [
-          (user, follower) => `${user}.id = ${follower}.user_id`,
-          (follower, user) => `${follower}.follower_id = ${user}.id`,
-        ],
-      },
+    followerCount: {
+      type: GraphQLInt,
+      description: '关注数量',
+      sqlExpr: table =>
+        `(SELECT count(*) FROM follower WHERE status = 1 AND user_id = ${table}.id)`,
     },
+    // 下面这两个字段好像用不到
+    // fans: {
+    //   type: new GraphQLList(User),
+    //   description: '粉丝',
+    //   where: () => `fan.status = 1`, //过滤掉取消关注的
+    //   junction: {
+    //     sqlTable: 'fan',
+    //     include: {
+    //       fanStatus: {
+    //         sqlColumn: 'status',
+    //       },
+    //     },
+    //     sqlJoins: [
+    //       (user, fan) => `${user}.id = ${fan}.user_id`,
+    //       (fan, user) => `${fan}.fan_id = ${user}.id`,
+    //     ],
+    //   },
+    // },
+    // followers: {
+    //   type: new GraphQLList(User),
+    //   description: '关注的人',
+    //   where: () => `follower.status = 1`, //过滤掉取消关注的
+    //   junction: {
+    //     sqlTable: 'follower',
+    //     sqlJoins: [
+    //       (user, follower) => `${user}.id = ${follower}.user_id`,
+    //       (follower, user) => `${follower}.follower_id = ${user}.id`,
+    //     ],
+    //   },
+    // },
   }),
 });
 

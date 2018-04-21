@@ -1,6 +1,8 @@
 /* eslint-disable global-require */
 const { GraphQLObjectType, GraphQLInt } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
+const { hasOne } = require('../../../lib/easy-monster');
+const User = require('./User');
 
 const Fan = new GraphQLObjectType({
   description: '粉丝表',
@@ -25,6 +27,11 @@ const Fan = new GraphQLObjectType({
       isArg: true,
       sqlColumn: 'fan_id',
     },
+    info: hasOne(User, {
+      description: '粉丝信息',
+      thisKey: 'fan_id',
+      foreignKey: 'id',
+    }),
     createTime: {
       type: GraphQLDateTime,
       sqlColumn: 'create_time',
