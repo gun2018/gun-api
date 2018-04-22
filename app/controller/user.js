@@ -15,7 +15,6 @@ module.exports = app => {
     }
     async checkAuth() {
       const { ctx } = this;
-      console.log('user', ctx.session);
       const { user } = ctx.session;
       if (user) {
         ctx.success(makeUserRes(user));

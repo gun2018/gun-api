@@ -58,9 +58,9 @@ const User = new GraphQLObjectType({
       sqlColumn: 'update_time',
       description: '更新时间',
     },
-    fanStatus: {
-      type: GraphQLInt, // 关联粉丝表时使用
-    },
+    // fanStatus: {
+    //   type: GraphQLInt, // 关联粉丝表时使用
+    // },
     fanCount: {
       type: GraphQLInt,
       description: '粉丝数量',

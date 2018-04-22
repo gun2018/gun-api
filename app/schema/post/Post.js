@@ -1,10 +1,17 @@
 /* eslint-disable global-require */
-const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
+const {
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLBoolean,
+} = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
 const { hasMany } = require('../../../lib/easy-monster');
 const PostPart = require('./PostPart');
 const PostLike = require('./PostLike');
 const Thinking = require('../thinking/Thinking');
+
+const dbCall = require('../../../lib/easy-monster/dbCall');
 
 const Post = new GraphQLObjectType({
   description: '文章',
@@ -51,6 +58,31 @@ const Post = new GraphQLObjectType({
       thisKey: 'id',
       foreignKey: 'post_id',
     }),
+    likeCount: {
+      type: GraphQLInt,
+      description: '点赞的数量',
+      sqlExpr: table => {
+        return `(SELECT count(*) FROM post_like WHERE status = 1 AND post_id = ${table}.id)`;
+      },
+    },
+    thinkingCount: {
+      type: GraphQLInt,
+      description: '观点数量',
+      sqlExpr: table => {
+        return `(SELECT count(*) FROM thinking WHERE status = 1 AND post_id = ${table}.id)`;
+      },
+    },
+    isLike: {
+      type: GraphQLBoolean,
+      resolve: async ({ id }, args, ctx) => {
+        console.log('argument', args);
+        const userId = ctx.user.id;
+        const postId = id;
+        const sql = `SELECT user_id FROM post_like where user_id=${userId} AND post_id=${postId} AND status = 1`;
+        const result = await dbCall(sql, ctx);
+        return (result[0] && result[0].user_id) || false;
+      },
+    },
     like: hasMany(PostLike, {
       description: '点赞',
       thisKey: 'id',
