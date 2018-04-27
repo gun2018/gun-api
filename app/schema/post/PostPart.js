@@ -20,18 +20,10 @@ const PostPart = new GraphQLObjectType({
       type: GraphQLString,
       description: '标题',
     },
-    type: {
-      type: GraphQLInt,
-      description: ' 1.段落 2.时间点',
-    },
     happenTime: {
       sqlColumn: 'happen_time',
       type: GraphQLDateTime,
       description: '发生时间',
-    },
-    order: {
-      type: GraphQLInt,
-      description: '段落顺序',
     },
     postId: {
       type: GraphQLInt,
