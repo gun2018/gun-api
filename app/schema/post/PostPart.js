@@ -25,6 +25,11 @@ const PostPart = new GraphQLObjectType({
       type: GraphQLDateTime,
       description: '发生时间',
     },
+    mergeCount: {
+      sqlColumn: 'merge_count',
+      type: GraphQLInt,
+      description: '提交数量',
+    },
     postId: {
       type: GraphQLInt,
       sqlColumn: 'post_id',

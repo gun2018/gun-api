@@ -6,11 +6,11 @@ const {
   GraphQLBoolean,
 } = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
-const { hasMany } = require('../../../lib/easy-monster');
+const { hasMany, hasOne } = require('../../../lib/easy-monster');
 const PostPart = require('./PostPart');
 const PostLike = require('./PostLike');
 const Thinking = require('../thinking/Thinking');
-
+const User = require('../user/User');
 const dbCall = require('../../../lib/easy-monster/dbCall');
 
 const Post = new GraphQLObjectType({
@@ -24,6 +24,12 @@ const Post = new GraphQLObjectType({
     status: {
       type: GraphQLInt,
       description: '状态： 0-删除、1-可用',
+      isArg: true,
+    },
+    authorId: {
+      type: GraphQLInt,
+      sqlColumn: 'author_id',
+      description: '文章发起人id',
       isArg: true,
     },
     title: {
@@ -83,6 +89,11 @@ const Post = new GraphQLObjectType({
         return (result[0] && result[0].user_id) || false;
       },
     },
+    author: hasOne(User, {
+      description: '文章发起人',
+      thisKey: 'author_id',
+      foreignKey: 'id',
+    }),
     like: hasMany(PostLike, {
       description: '点赞',
       thisKey: 'id',
