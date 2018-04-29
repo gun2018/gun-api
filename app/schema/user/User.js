@@ -73,6 +73,18 @@ const User = new GraphQLObjectType({
       sqlExpr: table =>
         `(SELECT count(*) FROM follower WHERE status = 1 AND user_id = ${table}.id)`,
     },
+    commitCount: {
+      type: GraphQLInt,
+      description: '提交申请的数量',
+      sqlExpr: table =>
+        `(SELECT count(*) FROM post_part_commit WHERE user_id = ${table}.id)`,
+    },
+    postCount: {
+      type: GraphQLInt,
+      description: '文章数量',
+      sqlExpr: table =>
+        `(SELECT count(*) FROM post WHERE author_id = ${table}.id)`,
+    },
     // 下面这两个字段好像用不到
     // fans: {
     //   type: new GraphQLList(User),
