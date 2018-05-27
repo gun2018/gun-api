@@ -1,9 +1,16 @@
 /* eslint-disable global-require */
-const { GraphQLObjectType, GraphQLInt, GraphQLString } = require('graphql');
+const {
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLBoolean,
+} = require('graphql');
 const { GraphQLDateTime } = require('graphql-iso-date');
 const { hasOne } = require('../../../lib/easy-monster');
 
 const User = require('../user/User');
+// const ThinkingLike = require('./ThinkingLike');
+const dbCall = require('../../../lib/easy-monster/dbCall');
 
 const Thinking = new GraphQLObjectType({
   description: '观点',
@@ -32,6 +39,23 @@ const Thinking = new GraphQLObjectType({
       sqlColumn: 'post_id',
       description: '对应的文章Id',
       isArg: true,
+    },
+    likeCount: {
+      type: GraphQLInt,
+      description: '点赞的数量',
+      sqlExpr: table => {
+        return `(SELECT count(*) FROM thinking_like WHERE status = 1 AND thinking_id = ${table}.id)`;
+      },
+    },
+    isLike: {
+      type: GraphQLBoolean,
+      resolve: async ({ id }, args, ctx) => {
+        const userId = ctx.user.id;
+        const thinkingId = id;
+        const sql = `SELECT user_id FROM thinking_like where user_id=${userId} AND thinking_id=${thinkingId} AND status = 1`;
+        const result = await dbCall(sql, ctx);
+        return (result[0] && result[0].user_id) || false;
+      },
     },
     createTime: {
       type: GraphQLDateTime,

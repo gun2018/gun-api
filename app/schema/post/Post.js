@@ -78,6 +78,20 @@ const Post = new GraphQLObjectType({
         return `(SELECT count(*) FROM thinking WHERE status = 1 AND post_id = ${table}.id)`;
       },
     },
+    titleCommitCount: {
+      type: GraphQLInt,
+      description: '标题提交的数量',
+      sqlExpr: table => {
+        return `(SELECT count(*) FROM post_commit WHERE post_id = ${table}.id)`;
+      },
+    },
+    contentCommitCount: {
+      type: GraphQLInt,
+      description: '内容提交的数量',
+      sqlExpr: table => {
+        return `(SELECT count(*) FROM post_part_commit WHERE post_id = ${table}.id)`;
+      },
+    },
     isLike: {
       type: GraphQLBoolean,
       resolve: async ({ id }, args, ctx) => {

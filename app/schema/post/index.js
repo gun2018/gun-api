@@ -3,8 +3,15 @@ const {
   queryBuilder,
   createBuilder,
   deleteBuilder,
+  updateBuilder,
 } = require('../../../lib/easy-monster/index');
-const { GraphQLList } = require('graphql');
+const {
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLInputObjectType,
+  GraphQLString,
+  GraphQLInt,
+} = require('graphql');
 
 const Post = require('./Post');
 const PostPart = require('./PostPart');
@@ -30,6 +37,63 @@ module.exports = {
     crearePostPartCommit: createBuilder({
       type: PostPartCommit,
       description: '新建提交请求',
+    }),
+    mergePostPartCommit: {
+      type: PostPartCommit,
+      args: {
+        input: {
+          type: new GraphQLNonNull(
+            new GraphQLInputObjectType({
+              name: 'MergePostPartCommit',
+              fields: () => ({
+                postPartCommitId: {
+                  type: GraphQLInt,
+                },
+                postPartId: {
+                  type: GraphQLInt,
+                },
+                seq: {
+                  type: GraphQLInt,
+                },
+                content: {
+                  type: GraphQLString,
+                },
+              }),
+            }),
+          ),
+        },
+      },
+      resolve: async (
+        _,
+        { input: { postPartCommitId, postPartId, seq, content } },
+        ctx,
+      ) => {
+        await ctx.knex.transaction(async transaction => {
+          await ctx
+            .knex('post_part_commit')
+            .transacting(transaction)
+            .where({
+              id: postPartCommitId,
+            })
+            .update({
+              status: 1,
+            });
+          await ctx
+            .knex('post_part')
+            .transacting(transaction)
+            .where({
+              id: postPartId,
+            })
+            .update({
+              content,
+              merge_count: seq,
+            });
+        });
+      },
+    },
+    updatePostPartCommit: updateBuilder({
+      type: PostPartCommit,
+      description: '处理提交请求',
     }),
     createPostLike: createBuilder({
       type: PostLike,
